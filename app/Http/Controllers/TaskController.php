@@ -11,10 +11,10 @@ class TaskController extends Controller
     {
         // Validate input
         $validated = $request->validate([
-            'title' => 'required|string',
-            'due_date' => 'required|date|after_or_equal:today',
-            'priority' => 'required|in:low,medium,high',
-        ]);
+       'title' => 'required|string|unique:tasks,title',
+       'due_date' => 'required|date|after_or_equal:today',
+       'priority' => 'required|in:low,medium,high',
+    ]);
 
         // Check duplicate title for same due_date
         $exists = Task::where('title', $validated['title'])
