@@ -1,61 +1,265 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#  Task Management API (Laravel)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+##  Overview
 
-## About Laravel
+This is a Task Management API built using Laravel and MySQL.
+It allows users to create, view, update, and delete tasks, as well as generate a daily report summarizing tasks by priority and status.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The API follows RESTful principles and enforces business rules such as status progression and deletion restrictions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+##  Tech Stack
 
-## Learning Laravel
+* Laravel (PHP Framework)
+* MySQL Database
+* Composer
+* Postman / cURL (for testing)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+##  Setup Instructions (Run Locally)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Clone the Repository
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/your-username/task-management-api.git
+cd task-management-api
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+### 2. Install Dependencies
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configure Environment File
 
-## Code of Conduct
+Copy the example `.env` file:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+Update database settings in `.env`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=task_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4. Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+### 5. Run Migrations and Seeders
+
+```bash
+php artisan migrate --seed
+```
+
+---
+
+### 6. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+Server will run at:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+##  API Endpoints
+
+### 🔹 1. Create Task
+
+```
+POST /api/tasks
+```
+
+---
+
+### 🔹 2. List Tasks
+
+```
+GET /api/tasks
+```
+
+Optional filter:
+
+```
+GET /api/tasks?status=pending
+```
+
+---
+
+### 🔹 3. Update Task Status
+
+```
+PATCH /api/tasks/{id}/status
+```
+
+---
+
+### 🔹 4. Delete Task
+
+```
+DELETE /api/tasks/{id}
+```
+
+---
+
+### 🔹 5. Daily Report (Bonus)
+
+```
+GET /api/tasks/report?date=YYYY-MM-DD
+```
+
+---
+
+##  Example API Requests
+
+### 🔹 Create Task
+
+```json
+POST /api/tasks
+{
+  "title": "Complete assignment",
+  "priority": "high",
+  "due_date": "2026-04-02"
+}
+```
+
+---
+
+### 🔹 Update Task Status
+
+```json
+PATCH /api/tasks/1/status
+{
+  "status": "in_progress"
+}
+```
+
+---
+
+### 🔹 Get Daily Report
+
+```
+GET /api/tasks/report?date=2026-04-01
+```
+
+---
+
+##  Business Rules Implemented
+
+* Task title must be unique per `due_date`
+* `due_date` must be today or later
+* Priority must be one of: `low`, `medium`, `high`
+* Status progression:
+
+  * `pending → in_progress → done`
+* Skipping or reverting status is not allowed
+* Only tasks with status `done` can be deleted
+* Tasks are sorted by:
+
+  * Priority (high → low)
+  * Due date (ascending)
+
+---
+
+##  Daily Report Format
+
+```json
+{
+  "date": "2026-03-28",
+  "summary": {
+    "high": {
+      "pending": 2,
+      "in_progress": 1,
+      "done": 0
+    },
+    "medium": {
+      "pending": 1,
+      "in_progress": 0,
+      "done": 3
+    },
+    "low": {
+      "pending": 0,
+      "in_progress": 0,
+      "done": 1
+    }
+  }
+}
+```
+
+---
+
+##  Deployment Instructions
+
+### Option 1: Railway
+
+1. Create a Railway account
+2. Connect your GitHub repository
+3. Add a MySQL database plugin
+4. Configure environment variables (`.env`)
+5. Deploy the application
+
+---
+
+### Option 2: Render
+
+1. Create a Render account
+2. Create a new Web Service
+3. Connect your GitHub repository
+4. Set environment variables
+5. Deploy the application
+
+---
+
+##  Testing
+
+You can test the API using Postman or cURL.
+
+### Example cURL Request
+
+```bash
+curl http://127.0.0.1:8000/api/tasks
+```
+
+---
+
+##  How to Run Quickly
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
+
+---
+
+## 👨 Author
+
+Reagan Chesa Chibole
